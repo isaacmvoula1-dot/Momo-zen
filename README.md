@@ -13,7 +13,7 @@ The bot uses an **online session system**, avoiding local QR scans and simplifyi
 ## 🌐 Session Generator
 
 <p align="center">
-  <a href="https://kaya-session-id.vercel.app" target="_blank">
+  <a href="https://momo-session-id.vercel.app" target="_blank">
     <button style="padding:12px 20px;font-size:16px;border:none;border-radius:8px;background:#28a745;color:white;cursor:pointer;">
       🔐 Generate WhatsApp Session
     </button>
