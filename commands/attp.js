@@ -25,7 +25,7 @@ export default {
 
       // Convert to WebP with EXIF
       const webpPath = await writeExif({ data: mp4Buffer, mimetype: 'video/mp4' }, {
-        packname: 'KAYA-MD',
+        packname: 'MOMO-ZEN AI',
         author: 'Kaya',
         categories: ['🤖']
       });

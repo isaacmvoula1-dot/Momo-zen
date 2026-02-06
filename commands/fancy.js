@@ -30,7 +30,7 @@ function convertStyle(text, type) {
 }
 
 function getStyleExamples() {
-  const text = 'KAYA';
+  const text = 'MOMO';
   let stylesList = '';
   for (let i = 1; i <= 14; i++) {
     try {
@@ -60,7 +60,7 @@ export default {
 ┃ .fancy <style> <texte>
 ┃
 ┃ 📎 Exemples :
-┃ .fancy 1 KAYA
+┃ .fancy 1 MOMO
 ┃ .fancy 13 hacking
 ┃
 ┃ 📑 Styles disponibles :

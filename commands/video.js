@@ -97,7 +97,7 @@ export default {
                 video: { url: videoData.download },
                 mimetype: 'video/mp4',
                 fileName: `${videoData.title || videoTitle || 'video'}.mp4`,
-                caption: `*${videoData.title || videoTitle || 'Video'}*\n\n> *_Téléchargée par KAYA-MD_*`
+                caption: `*${videoData.title || videoTitle || 'Video'}*\n\n> *_Téléchargée par MOMO-ZEN AI_*`
             }, { quoted: m });
 
         } catch (error) {

@@ -1,112 +1,95 @@
 // ==================== commands/menu.js ====================
-import fs from 'fs';
-import path from 'path';
+import { commands } from '../handler.js';
 import { contextInfo } from '../system/contextInfo.js';
-import { BOT_NAME, BOT_SLOGAN, BOT_VERSION, getBotImage } from '../system/botAssets.js';
-import config from '../config.js';
 
-// ===================== FORMAT UPTIME =====================
-function formatUptime(ms) {
-  const s = Math.floor(ms / 1000) % 60;
-  const m = Math.floor(ms / (1000 * 60)) % 60;
-  const h = Math.floor(ms / (1000 * 60 * 60)) % 24;
-  const d = Math.floor(ms / (1000 * 60 * 60 * 24));
-  return `${d}j ${h}h ${m}m ${s}s`;
-}
-
-// ===================== CHARGER COMMANDES =====================
-async function loadCommands() {
-  const commandsDir = path.join(process.cwd(), 'commands');
-  const files = fs.readdirSync(commandsDir).filter(f => f.endsWith('.js'));
-
-  const categories = {};
-
-  for (const file of files) {
-    try {
-      const cmd = (await import(`./${file}`)).default;
-      if (!cmd?.name) continue;
-
-      const cat = (cmd.category || 'GÉNÉRAL').toUpperCase();
-      if (!categories[cat]) categories[cat] = [];
-      categories[cat].push(`.${cmd.name}`);
-    } catch (err) {
-      console.error('Erreur load command:', file, err.message);
-    }
-  }
-
-  return categories;
-}
+const MENU_THEMES = [
+  { url: "https://files.catbox.moe/6e8cho.jpg", emoji: "🌑", frame: ["« 🌑 ━━━━━━━ SYSTEM ━━━━━━━ 🌑 »", "┃", "« ━━━━━━━━━━━━━━━━━━━━━━━━━━ »"] },
+  { url: "https://files.catbox.moe/2v7xl4.jpg", emoji: "💠", frame: ["╭💠──────────────────💠╮", "│", "╰💠──────────────────💠╯"] },
+  { url: "https://files.catbox.moe/jwwjsj.jpg", emoji: "⚔️", frame: ["⚔️|──────────────────|⚔️", "┃", "⚔️|──────────────────|⚔️"] },
+  { url: "https://files.catbox.moe/mi5dfw.jpg", emoji: "⚡", frame: ["⚡══════════════════⚡", "⚡", "⚡══════════════════⚡"] },
+  { url: "https://files.catbox.moe/sixfi7.jpg", emoji: "🔥", frame: ["🔥━━━━━━━━━━━━━━━━━━🔥", "🔥", "🔥━━━━━━━━━━━━━━━━━━🔥"] },
+  { url: "https://files.catbox.moe/5h3p0k.jpg", emoji: "🧬", frame: ["◈🧬━━━━━━━━━━━━━━━🧬◈", "◈", "◈🧬━━━━━━━━━━━━━━━🧬◈"] },
+  { url: "https://files.catbox.moe/97v0yn.jpg", emoji: "👑", frame: ["👑══════════════════👑", "┃", "👑══════════════════👑"] },
+  { url: "https://files.catbox.moe/7t9dud.jpg", emoji: "🩸", frame: ["🩸──────────────────🩸", "┃", "🩸──────────────────🩸"] },
+  { url: "https://files.catbox.moe/jmocnq.jpg", emoji: "🌌", frame: ["🌌▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🌌", "🌌", "🌌▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🌌"] },
+  { url: "https://files.catbox.moe/0ultrk.jpg", emoji: "🎭", frame: ["🎭━━━━━━━━━━━━━━━━━━🎭", "┃", "🎭━━━━━━━━━━━━━━━━━━🎭"] },
+  { url: "https://files.catbox.moe/nwtwec.jpg", emoji: "🧊", frame: ["❄️══════════════════❄️", "❄️", "❄️══════════════════❄️"] },
+  { url: "https://files.catbox.moe/ghumqx.jpg", emoji: "🧿", frame: ["🌀━━━━━━━━━━━━━━━━━━🌀", "🌀", "🌀━━━━━━━━━━━━━━━━━━🌀"] },
+  { url: "https://files.catbox.moe/to9mhw.jpg", emoji: "🔱", frame: ["🔱──────────────────🔱", "🔱", "🔱──────────────────🔱"] },
+  { url: "https://files.catbox.moe/1ghz46.jpg", emoji: "✨", frame: ["✨━━━━━━━━━━━━━━━✨", "✨", "✨━━━━━━━━━━━━━━━✨"] },
+  { url: "https://files.catbox.moe/uyk5v1.jpg", emoji: "👤", frame: ["☾━━━━━━━━━━━━━━━━━━☽", "┃", "☾━━━━━━━━━━━━━━━━━━☽"] },
+  { url: "https://files.catbox.moe/jlnqs3.jpg", emoji: "⛩️", frame: ["⛩️──────────────────⛩️", "⛩️", "⛩️──────────────────⛩️"] }
+];
 
 export default {
   name: 'menu',
-  description: 'Affiche le menu du bot (Solo Leveling)',
+  description: 'Affiche le menu principal',
+  category: 'Général',
 
-  async execute(Kaya, m) {
+  async execute(sock, m, args) {
+    // Calcul des catégories depuis l'import de handler.js
+    const categories = {};
+    const allCmds = Object.values(commands);
+    
+    allCmds.forEach(cmd => {
+      const cat = (cmd.category || 'Général').toUpperCase();
+      if (!categories[cat]) categories[cat] = [];
+      if (!categories[cat].includes(`.${cmd.name}`)) {
+        categories[cat].push(`.${cmd.name}`);
+      }
+    });
+
+    const totalCmds = allCmds.length;
     const now = new Date();
-    const user = m.sender.split('@')[0];
-    const uptime = formatUptime(process.uptime() * 1000);
+    const date = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
-    const categories = await loadCommands();
-    const totalCmds = Object.values(categories).reduce((a, b) => a + b.length, 0);
+    // Sélection du thème
+    const theme = MENU_THEMES[Math.floor(Math.random() * MENU_THEMES.length)];
 
-    // ===================== HEADER SOLO LEVELING =====================
+    // Construction du texte (Format épuré demandé)
     let menuText = `
-╔═══════════════════════╗
- 『 A V I S  D U  S Y S T È M E 』
-╚═══════════════════════╝
+${theme.frame[0]}
+   ${theme.emoji}  *MOMO-ZEN AI* ${theme.emoji}
+${theme.frame[2]}
 
-👤 Chasseur : @${user}
-🤖 Bot      : ${BOT_NAME}
-🧬 Version  : ${BOT_VERSION}
-⚔️ Rang     : NON ÉVEILLÉ
-💠 Mana     : ∞
-⏳ Uptime   : ${uptime}
-📦 Commandes: ${totalCmds}
+${theme.emoji} **DÉVELOPPEUR** : MOMO
+${theme.emoji} **COMMANDES** : ${totalCmds}
+${theme.emoji} **DATE** : ${date}
+${theme.emoji} **HEURE** : ${heure}
 
-╔══════════════════════╗
-   『 M E N U  D O N J O N 』
-╚══════════════════════╝
+╰──────────────────────────
 `;
 
-    // ===================== MENUS PAR CATÉGORIE =====================
-    const sortedCats = Object.keys(categories).sort(
-      (a, b) => categories[b].length - categories[a].length
-    );
-
+    // Affichage des catégories et commandes
+    const sortedCats = Object.keys(categories).sort();
     for (const cat of sortedCats) {
-      const cmds = categories[cat];
       menuText += `
-『 ⚔️ ${cat} 』
-╭────────────────────────
-│ ${cmds.join('\n│ ')}
-╰────────────────────────
+『 ${theme.emoji} *\`${cat}\`* 』
+${theme.frame[1]}─────────────────────
+${theme.frame[1]} ${categories[cat].sort().join(`\n${theme.frame[1]} `)}
+╰─────────────────────
 `;
     }
 
-    // ===================== FOOTER =====================
-    menuText += `
-╔════════════════════╗
-   ⚠ 『  S Y S T È M E 』
-╚════════════════════╝
+    menuText += `\n> © MOMO-ZEN AI - 2026`;
 
-📈 Progresse chaque jour.
-⚔️ Survis aux donjons.
-👑 Deviens le plus fort.
-
-${BOT_SLOGAN}
-`;
-
-    // ===================== ENVOI =====================
-    await Kaya.sendMessage(
-      m.chat,
-      {
-        image: { url: getBotImage() },
-        caption: menuText,
-        contextInfo: {
-          ...contextInfo,
-          mentionedJid: [m.sender],
-        },
+    // Envoi du message avec l'image du thème
+    await sock.sendMessage(m.chat, {
+      image: { url: theme.url },
+      caption: menuText,
+      contextInfo: {
+        ...contextInfo,
+        mentionedJid: [m.sender],
+        externalAdReply: {
+          title: "M O M O - Z E N  A I",
+          body: "S Y S T E M  A C T I V A T E D",
+          thumbnailUrl: theme.url,
+          sourceUrl: "https://github.com/", // Tu peux mettre ton lien ici
+          mediaType: 1,
+          renderLargerThumbnail: true
+        }
       }
-    );
+    }, { quoted: m });
   },
 };

@@ -1,101 +1,77 @@
 // ==================== commands/antitag.js ====================
-import { setAntitag, getAntitag, removeAntitag } from "../lib/antitag.js";
-import checkAdminOrOwner from "../system/checkAdmin.js";
+import config from '../config.js';
 
 export default {
   name: "antitag",
-  alias: ["anti-tag"], // "tagall" supprimé
-  description: "🚫 Configure the anti-tag system",
-  category: "Groupe",
-  group: true,
-  admin: true,
-  botAdmin: true,
+  alias: ["anti-tag"],
+  description: "Configure le système Anti-Tag",
+  category: "GROUPE",
 
-  // ==================== COMMAND ====================
-  run: async (kaya, m, args) => {
+  run: async (sock, m, args) => {
     try {
       const chatId = m.chat;
 
-      if (!m.isGroup) {
-        return kaya.sendMessage(chatId, { text: "❌ This command only works in groups." }, { quoted: m });
+      if (!m.isGroup) return;
+
+      // 1. Récupération des données du groupe pour vérification admin
+      const groupMetadata = await sock.groupMetadata(chatId);
+      const participants = groupMetadata.participants;
+      
+      // Utilisation du formatage de sender de ton handler
+      const senderId = m.sender.split(':')[0] + "@s.whatsapp.net";
+      const user = participants.find(p => p.id.includes(senderId.split('@')[0]));
+      
+      const isMomo = m.fromMe;
+      const isAdmin = user?.admin === 'admin' || user?.admin === 'superadmin';
+
+      if (!isMomo && !isAdmin) {
+        return sock.sendMessage(chatId, { text: "🚫 ACCÈS REFUSÉ : Seul un Admin peut configurer la protection." });
       }
 
       const action = args[0]?.toLowerCase();
 
-      // 📖 Help menu
+      // Initialisation du mode si inexistant
+      global.botModes.antitag ??= {};
+
       if (!action) {
-        return kaya.sendMessage(
-          chatId,
-          {
-            text: `🚫 *ANTITAG SYSTEM*
+        return sock.sendMessage(chatId, {
+          text: `🚫 *SYSTÈME ANTI-TAG*
+          
+.antitag on  -> Active la protection
+.antitag off -> Désactive la protection
 
-.antitag on
-→ Enable antitag (default action: DELETE)
-
-.antitag off
-→ Disable antitag
-
-.antitag set delete
-→ Delete messages containing tagall
-
-.antitag set kick
-→ Kick user on tagall
-
-.antitag get
-→ Show antitag status`
-          },
-          { quoted: m }
-        );
+*Effet : Supprime automatiquement les tentatives de tagall non autorisées.*`
+        });
       }
 
-      // 📊 GET STATUS
-      if (action === "get") {
-        const data = await getAntitag(chatId);
-        return kaya.sendMessage(
-          chatId,
-          {
-            text:
-`📊 *ANTITAG STATUS*
-• State  : ${data?.enabled ? "ON ✅" : "OFF ❌"}
-• Action : ${data?.action || "—"}`
-          },
-          { quoted: m }
-        );
-      }
-
-      // 🔐 Admin / Owner check
-      const check = await checkAdminOrOwner(kaya, chatId, m.sender);
-      if (!check.isAdminOrOwner) {
-        return kaya.sendMessage(chatId, { text: "🚫 Only admins or owner can use this command." }, { quoted: m });
-      }
-
-      // ⚙️ ACTIONS
-      switch (action) {
-        case "on":
-          await setAntitag(chatId, true, "delete");
-          return kaya.sendMessage(chatId, { text: "✅ Antitag enabled (action: DELETE)." }, { quoted: m });
-
-        case "off":
-          await removeAntitag(chatId);
-          return kaya.sendMessage(chatId, { text: "❌ Antitag disabled." }, { quoted: m });
-
-        case "set": {
-          const mode = args[1];
-          if (!["delete", "kick"].includes(mode)) {
-            return kaya.sendMessage(chatId, { text: "⚠️ Usage: .antitag set delete | kick" }, { quoted: m });
-          }
-
-          await setAntitag(chatId, true, mode);
-          return kaya.sendMessage(chatId, { text: `⚙️ Antitag action set to: ${mode.toUpperCase()}` }, { quoted: m });
-        }
-
-        default:
-          return kaya.sendMessage(chatId, { text: "❓ Unknown option. Type .antitag" }, { quoted: m });
+      if (action === "on") {
+        global.botModes.antitag[chatId] = true;
+        return sock.sendMessage(chatId, { 
+            image: { url: "https://files.catbox.moe/v7zea2.jpg" },
+            caption: "✅ *PROTECTION ACTIVÉE*\n\nLe Monarque surveille désormais les mentions de ce groupe." 
+        });
+      } else if (action === "off") {
+        global.botModes.antitag[chatId] = false;
+        return sock.sendMessage(chatId, { 
+            text: "❌ *PROTECTION DÉSACTIVÉE*" 
+        });
       }
 
     } catch (err) {
-      console.error("❌ ANTITAG COMMAND ERROR:", err);
-      await kaya.sendMessage(m.chat, { text: "❌ Error while processing antitag command." }, { quoted: m });
+      console.error("Erreur Antitag :", err);
+    }
+  },
+
+  // 🛡️ DÉTECTION PASSIVE (Ajouté selon ton handler.js ligne 144)
+  detect: async (sock, m) => {
+    if (!m.isGroup || !global.botModes.antitag?.[m.chat]) return;
+
+    // Détection des tags massifs (@everyone ou plus de 10 mentions)
+    const isTagAll = m.body.includes('@everyone') || m.body.includes('@here') || m.mentionedJid?.length > 10;
+
+    if (isTagAll && !m.fromMe) {
+      // Suppression du message
+      await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {});
     }
   }
 };

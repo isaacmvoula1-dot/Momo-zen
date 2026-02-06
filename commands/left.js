@@ -1,27 +1,49 @@
 // ==================== commands/left.js ====================
-import { contextInfo } from "../system/contextInfo.js";
+import config from '../config.js';
 
 export default {
   name: "left",
-  description: "🚪 Le bot quitte le groupe (Sécurité absolue)",
-  category: "Groupe",
+  alias: ["leave", "sortir"],
+  description: "Le bot quitte le donjon sur ordre de MOMO",
+  category: "OWNER",
 
-  run: async (kaya, m) => {
+  run: async (sock, m, args) => {
     try {
-      // 🔐 Sécurité absolue
-      if (!m.fromMe) return;
+      const chatId = m.chat;
 
-      // 📛 Groupe uniquement
-      if (!m.isGroup) {
-        return kaya.sendMessage(
-          m.chat,
-          { text: "❗ Cette commande s’utilise uniquement dans un groupe.", contextInfo },
-          { quoted: m }
-        );
+      // 1. Sécurité : Seul MOMO (Owner) peut donner cet ordre
+      // On vérifie si c'est toi (fromMe) OU ton numéro configuré
+      if (!m.fromMe && m.sender !== config.ownerNumber) {
+        return sock.sendMessage(chatId, { text: "🚫 SEUL LE MONARQUE PEUT ORDONNER MON RETRAIT." });
       }
 
-      // 🚪 Quitter le groupe (sans message inutile)
-      await kaya.groupLeave(m.chat);
+      if (!m.isGroup) return;
+
+      const leaveMsg = `
++---------------------------------------+
+|       MISSION TERMINÉE : RETRAIT      |
++---------------------------------------+
+|                                       |
+| ⚡ ORDRE DE MOMO REÇU                 |
+| 🌑 STATUT : RETRAIT DES OMBRES        |
+|                                       |
+| "CE DONJON N'A PLUS RIEN À M'OFFRIR.  |
+| JE DISPARAIS DANS LE NÉANT."          |
+|                                       |
++---------------------------------------+
+STATUT : DÉCONNEXION...`;
+
+      // 2. Envoi de l'image de sortie
+      await sock.sendMessage(chatId, {
+        image: { url: "https://files.catbox.moe/3k8i0k.jpg" },
+        caption: leaveMsg
+      });
+
+      // 3. Délai de 2 secondes pour s'assurer que le message part
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // 4. Le bot quitte le groupe
+      await sock.groupLeave(chatId);
 
     } catch (err) {
       console.error("❌ Erreur commande left :", err);

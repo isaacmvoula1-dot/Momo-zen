@@ -1,55 +1,58 @@
-import checkAdminOrOwner from '../system/checkAdmin.js';
-
+// ==================== commands/tagall.js ====================
 export default {
   name: "tagall",
-  description: "Tag tous les membres (Style Solo Leveling)",
+  alias: ["everyone", "mention"],
+  description: "📢 Invoque tous les membres du groupe (Solo Leveling Style)",
+  category: "Groupe",
 
-  async execute(sock, m, args) {
-    if (!m.isGroup) 
-      return sock.sendMessage(m.chat, { text: "⚠️ Cette commande est réservée aux donjons (groupes)." });
+  run: async (sock, m, args) => {
+    try {
+      const chatId = m.chat;
 
-    const isAdmin = await checkAdminOrOwner(sock, m);
-    if (!isAdmin) 
-      return sock.sendMessage(m.chat, { text: "❌ Seul un Maître du Donjon peut utiliser cette commande." });
+      // 1. Vérification : Uniquement en groupe
+      if (!m.isGroup) {
+        return sock.sendMessage(chatId, { text: "❌ Le donjon est requis pour cette invocation." });
+      }
 
-    const metadata = await sock.groupMetadata(m.chat);
-    const participants = metadata.participants;
+      // 2. Récupération des données du groupe et des participants
+      const metadata = await sock.groupMetadata(chatId);
+      const participants = metadata.participants.map(p => p.id);
 
-    const groupName = metadata.subject;
-    const groupSize = participants.length;
-    const date = new Date().toLocaleString();
+      // 3. Préparation du temps et de la date
+      const now = new Date();
+      const date = now.toLocaleDateString('fr-FR');
+      const time = now.toLocaleTimeString('fr-FR');
 
-    let mentions = [];
-    let tagText = "";
+      // 4. Construction de la liste numérotée (Style Épuré)
+      let mentionText = "";
+      participants.forEach((p, i) => {
+        mentionText += `│ ${i + 1}. @${p.split('@')[0]}\n`;
+      });
 
-    for (let p of participants) {
-      mentions.push(p.id);
-      tagText += `⚔️ @${p.id.split("@")[0]}\n`;
+      // 5. Menu Solo Leveling
+      const fullMessage = `
+┌───  「 **SYSTEM : INVOCATION** 」
+│ 
+│ ⚡ **APPEL DU MONARQUE**
+│ 📅 Date : ${date}
+│ ⏰ Heure : ${time}
+│ 👥 Sujets : ${participants.length}
+│ 🏰 Donjon : ${metadata.subject}
+│ 
+├───────────────────────────
+${mentionText}
+└───────────────────────────
+   *“Éveillez-vous... le Maître vous appelle.”*`;
+
+      // 6. Envoi avec ton image Jin-Woo sur le trône
+      await sock.sendMessage(chatId, {
+        image: { url: "https://files.catbox.moe/nwtwec.jpg" },
+        caption: fullMessage,
+        mentions: participants
+      });
+
+    } catch (error) {
+      console.error("❌ Erreur Tagall :", error);
     }
-
-    const tagallText = `
-╔════════════════════════╗
-  『 A V I S  D U  S Y S T È M E 』
-╚════════════════════════╝
-
-👑 Maître du Donjon : @${m.sender.split("@")[0]}
-🏰 Donjon          : *${groupName}*
-👥 Chasseurs       : ${groupSize}
-📆 Date système    : ${date}
-
-⚠️ [ APPEL DU SYSTÈME ]
-Tous les chasseurs sont convoqués !
-
-${tagText}
-
-⚔️ Survis.
-📈 Progresse.
-👑 Deviens plus fort.
-`;
-
-    await sock.sendMessage(m.chat, {
-      text: tagallText,
-      mentions
-    });
   }
 };

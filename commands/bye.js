@@ -110,7 +110,7 @@ export default {
           const userPP = await kaya.profilePictureUrl(userJid, "image").catch(() => null);
           const groupPP = await kaya.profilePictureUrl(chatId, "image").catch(() => "https://i.imgur.com/3XjWdoI.png");
 
-          const byeText = `╭━━〔 MOMO-ZEN  〕━━⬣
+          const byeText = `╭━━〔 MOMO-ZEN AI  〕━━⬣
 ├ 👋 Au revoir ${username}
 ├ 🎓 Groupe: *${metadata.subject || "Nom inconnu"}*
 ├ 👥 Membres restants : ${metadata.participants.length}

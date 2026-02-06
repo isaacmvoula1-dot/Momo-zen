@@ -1,185 +1,128 @@
+// ==================== commands/welcome.js ====================
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { contextInfo } from '../system/contextInfo.js';
-import checkAdminOrOwner from '../system/checkAdmin.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const WELCOME_FILE = path.join(__dirname, '../data/welcome.json');
 
-/* ================== INIT / LOAD / SAVE ================== */
-const initWelcomeFile = () => {
-  if (!fs.existsSync(WELCOME_FILE)) {
-    const dir = path.dirname(WELCOME_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(WELCOME_FILE, JSON.stringify({}, null, 2));
-  }
-};
-
+// --- Gestion des données ---
 const loadWelcomeData = () => {
   try {
-    initWelcomeFile();
+    if (!fs.existsSync(path.dirname(WELCOME_FILE))) fs.mkdirSync(path.dirname(WELCOME_FILE), { recursive: true });
+    if (!fs.existsSync(WELCOME_FILE)) fs.writeFileSync(WELCOME_FILE, JSON.stringify({}));
     return JSON.parse(fs.readFileSync(WELCOME_FILE, 'utf8'));
-  } catch {
-    return {};
-  }
+  } catch { return {}; }
 };
 
-const saveWelcomeData = (data) => {
-  fs.writeFileSync(WELCOME_FILE, JSON.stringify(data, null, 2));
-};
+const saveWelcomeData = (data) => fs.writeFileSync(WELCOME_FILE, JSON.stringify(data, null, 2));
 
-/* ================== COMMANDE ================== */
 export default {
   name: 'welcome',
   alias: ['bienvenue', 'wel'],
-  description: 'Active/désactive les messages de bienvenue',
+  description: 'Gère les arrivées dans le donjon',
   category: 'Groupe',
-  ownerOnly: true,
 
-  async execute(sock, m, args) {
+  run: async (sock, m, args) => {
     try {
-      const permissions = await checkAdminOrOwner(sock, m.chat, m.sender);
-      if (!permissions.isOwner) {
-        return sock.sendMessage(
-          m.chat,
-          { text: '🚫 Commande réservée à l’owner du bot.', contextInfo },
-          { quoted: m }
-        );
-      }
-
-      const welcomeData = loadWelcomeData();
       const chatId = m.chat;
+      const welcomeData = loadWelcomeData();
+
+      // Vérification Admin/Owner simplifiée pour ton handler
+      const groupMetadata = await sock.groupMetadata(chatId);
+      const user = groupMetadata.participants.find(p => p.id === m.sender);
+      if (!(user?.admin || m.fromMe)) {
+        return sock.sendMessage(chatId, { text: "🚫 Seul le Monarque ou un Admin peut configurer le Welcome." });
+      }
 
       if (!args.length) {
-        return sock.sendMessage(
-          chatId,
-          {
-            text: `
-╭━━〔 MOMO MD 〕━━⬣
-│
-│ • ${global.PREFIX}welcome on → Active ici
-│ • ${global.PREFIX}welcome off → Désactive ici
-│ • ${global.PREFIX}welcome all → Active global
-│ • ${global.PREFIX}welcome all off → Désactive global
-│ • ${global.PREFIX}welcome status → Voir statut
-╰──────────────────⬣`.trim(),
-            contextInfo
-          },
-          { quoted: m }
-        );
+        return sock.sendMessage(chatId, {
+          text: `
++---------------------------------------+
+|        SYSTÈME : BIENVENUE            |
++---------------------------------------+
+|                                       |
+| • .welcome on  -> Activer ici         |
+| • .welcome off -> Désactiver ici      |
+| • .welcome status -> Voir l'état      |
+|                                       |
++---------------------------------------+
+COMMANDE SIGNÉE MOMO 2026`.trim()
+        });
       }
 
-      const subCmd = args.join(' ').toLowerCase();
+      const subCmd = args[0].toLowerCase();
 
-      if (subCmd === 'all off') {
-        delete welcomeData.global;
-        saveWelcomeData(welcomeData);
-        return sock.sendMessage(chatId, { text: '❌ Welcome global désactivé.' }, { quoted: m });
-      }
-
-      if (subCmd === 'all') {
-        welcomeData.global = true;
-        saveWelcomeData(welcomeData);
-        return sock.sendMessage(chatId, { text: '✅ Welcome global activé.' }, { quoted: m });
-      }
-
-      if (subCmd === 'on' || subCmd === '1') {
+      if (subCmd === 'on') {
         welcomeData[chatId] = true;
         saveWelcomeData(welcomeData);
-        return sock.sendMessage(chatId, { text: '✅ Welcome activé pour ce groupe.' }, { quoted: m });
+        return sock.sendMessage(chatId, { text: '✅ [SYSTÈME] : Protocole de bienvenue activé dans ce donjon.' });
       }
 
-      if (subCmd === 'off' || subCmd === '0') {
+      if (subCmd === 'off') {
         delete welcomeData[chatId];
         saveWelcomeData(welcomeData);
-        return sock.sendMessage(chatId, { text: '❌ Welcome désactivé pour ce groupe.' }, { quoted: m });
+        return sock.sendMessage(chatId, { text: '❌ [SYSTÈME] : Protocole de bienvenue désactivé.' });
       }
 
       if (subCmd === 'status') {
-        const globalStatus = welcomeData.global ? '✅ Activé globalement' : '❌ Désactivé globalement';
-        const groupStatus = welcomeData[chatId] ? '✅ Activé ici' : '❌ Désactivé ici';
-        return sock.sendMessage(
-          chatId,
-          { text: `📊 *STATUT WELCOME*\n\n${globalStatus}\n${groupStatus}` },
-          { quoted: m }
-        );
+        const status = welcomeData[chatId] ? 'ACTIF 🟢' : 'INACTIF 🔴';
+        return sock.sendMessage(chatId, { text: `📊 STATUT WELCOME : ${status}` });
       }
 
-      return sock.sendMessage(chatId, { text: '❌ Commande non reconnue.' }, { quoted: m });
-
     } catch (err) {
-      console.error('❌ Erreur commande welcome:', err);
-      sock.sendMessage(m.chat, { text: '❌ Erreur lors de la configuration.' }, { quoted: m });
+      console.error('❌ Erreur Welcome:', err);
     }
   },
 
-  /* ================== PARTICIPANT UPDATE ================== */
-  async participantUpdate(sock, update) {
+  // Appelé par handleParticipantUpdate dans ton handler.js (Ligne 161)
+  participantUpdate: async (sock, update) => {
     try {
       if (update.action !== 'add') return;
 
       const welcomeData = loadWelcomeData();
       const chatId = update.id;
 
-      if (!welcomeData.global && !welcomeData[chatId]) return;
+      if (!welcomeData[chatId]) return;
 
       const metadata = await sock.groupMetadata(chatId);
-      const now = new Date();
-      const date = now.toLocaleDateString('fr-FR');
-      const creationDate = metadata.creation
-        ? new Date(metadata.creation * 1000).toLocaleDateString('fr-FR')
-        : 'Inconnue';
-
-      for (const user of update.participants) {
-        const userJid = typeof user === 'string' ? user : user?.id || user?.jid;
-        if (!userJid) continue;
-
+      
+      for (const participant of update.participants) {
+        const userJid = participant;
         const username = '@' + userJid.split('@')[0];
-        const groupName = metadata.subject || 'Nom inconnu';
-        const groupSize = metadata.participants.length;
 
-        // photo profil
+        // Récupération Photo de profil ou image MOMO par défaut
         let ppUrl;
         try {
           ppUrl = await sock.profilePictureUrl(userJid, 'image');
         } catch {
-          ppUrl = 'https://i.ibb.co/7CQVJNm/default-profile.png';
+          ppUrl = 'https://files.catbox.moe/iw4tzb.jpg'; 
         }
 
-        // ✅ MESSAGE CLEAN SOLO LEVELING
         const welcomeText = `
-╔═════════════════╗
-   『 S Y S T È M E 』
-╚═════════════════╝
++---------------------------------------+
+|       NOUVELLE OMBRE DÉTECTÉE         |
++---------------------------------------+
 
 👤 Chasseur : ${username}
-🏰 Guilde   : *${groupName}*
-👥 Membres  : ${groupSize}
-📆 Date     : ${date}
+🏰 Donjon   : *${metadata.subject}*
+👥 Rang     : #${metadata.participants.length}
 
-⚠️ RÈGLES DU DONJON
-➤ Pas de liens ❌
-➤ Pas de contenu interdit 🔞
-➤ Pas de spam 🚫
+"MOMO T'OBSERVE. RESPECTE LES RÈGLES
+OU TU SERAS PURGÉ SANS PRÉAVIS."
 
-⚔️ Survis. Progresse. Deviens plus fort.
-`;
+⚔️ SURVIS. PROGRESSE. DOMINE.
++---------------------------------------+`;
 
         await sock.sendMessage(chatId, {
           image: { url: ppUrl },
           caption: welcomeText,
-          mentions: [userJid],
-          contextInfo: { ...contextInfo, mentionedJid: [userJid] }
+          mentions: [userJid]
         });
-
-        await new Promise(r => setTimeout(r, 500));
       }
-
     } catch (err) {
-      console.error('❌ Welcome participant error:', err);
+      console.error('❌ Welcome Update Error:', err);
     }
   }
 };
