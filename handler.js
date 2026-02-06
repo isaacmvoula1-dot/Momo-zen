@@ -159,15 +159,15 @@ async function handleCommand(sock, mRaw) {
       if (commands[commandName]) isCommand = true;
     }
 
-    // ===== 🔥 AJOUT BLOC onMention 🔥 =====
-    for (const cmd of Object.values(commands)) {
-      if (typeof cmd.onMention === "function") {
-        await cmd.onMention(sock, m);
+    // --- Ajout de la détection Anti-Link ou autres détections passives ---
+    for (const name in commands) {
+      const cmd = commands[name];
+      if (cmd.detect && typeof cmd.detect === 'function') {
+        await cmd.detect(sock, m).catch(() => {});
       }
     }
-    // =====================================
 
-    // … 🔥 TOUT LE RESTE EST INCHANGÉ 🔥
+    if (!isCommand) return;
 
     const cmd = commands[commandName];
     if (!cmd) return;
@@ -181,12 +181,13 @@ async function handleCommand(sock, mRaw) {
   }
 }
 
-// ================== 👥 Participant update ==================
+// ================== 👥 Participant update (AJOUTÉ) ==================
 async function handleParticipantUpdate(sock, update) {
   try {
+    // Parcourt toutes les commandes pour voir si l'une d'elles gère les entrées/sorties
     for (const cmd of Object.values(commands)) {
       if (typeof cmd.participantUpdate === 'function') {
-        await cmd.participantUpdate(sock, update).catch(() => {});
+        await cmd.participantUpdate(sock, update).catch((e) => console.error(`Erreur participantUpdate (${cmd.name}):`, e));
       }
     }
   } catch (err) {
