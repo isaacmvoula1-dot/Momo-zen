@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
 export default {
-  name: 'ai',
+  name: 'Sung Il-hwan',
   alias: ['gpt', 'chat'],
   category: 'AI',
   description: 'Parler avec une intelligence artificielle',
