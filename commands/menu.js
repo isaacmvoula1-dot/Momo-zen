@@ -3,22 +3,8 @@ import { commands } from '../handler.js';
 import { contextInfo } from '../system/contextInfo.js';
 
 const MENU_THEMES = [
-  { url: "https://files.catbox.moe/6e8cho.jpg", emoji: "🌑", frame: ["« 🌑 ━━━━━━━ SYSTEM ━━━━━━━ 🌑 »", "┃", "« ━━━━━━━━━━━━━━━━━━━━━━━━━━ »"] },
-  { url: "https://files.catbox.moe/2v7xl4.jpg", emoji: "💠", frame: ["╭💠──────────────────💠╮", "│", "╰💠──────────────────💠╯"] },
-  { url: "https://files.catbox.moe/jwwjsj.jpg", emoji: "⚔️", frame: ["⚔️|──────────────────|⚔️", "┃", "⚔️|──────────────────|⚔️"] },
-  { url: "https://files.catbox.moe/mi5dfw.jpg", emoji: "⚡", frame: ["⚡══════════════════⚡", "⚡", "⚡══════════════════⚡"] },
-  { url: "https://files.catbox.moe/sixfi7.jpg", emoji: "🔥", frame: ["🔥━━━━━━━━━━━━━━━━━━🔥", "🔥", "🔥━━━━━━━━━━━━━━━━━━🔥"] },
-  { url: "https://files.catbox.moe/5h3p0k.jpg", emoji: "🧬", frame: ["◈🧬━━━━━━━━━━━━━━━🧬◈", "◈", "◈🧬━━━━━━━━━━━━━━━🧬◈"] },
-  { url: "https://files.catbox.moe/97v0yn.jpg", emoji: "👑", frame: ["👑══════════════════👑", "┃", "👑══════════════════👑"] },
-  { url: "https://files.catbox.moe/7t9dud.jpg", emoji: "🩸", frame: ["🩸──────────────────🩸", "┃", "🩸──────────────────🩸"] },
-  { url: "https://files.catbox.moe/jmocnq.jpg", emoji: "🌌", frame: ["🌌▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🌌", "🌌", "🌌▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🌌"] },
-  { url: "https://files.catbox.moe/0ultrk.jpg", emoji: "🎭", frame: ["🎭━━━━━━━━━━━━━━━━━━🎭", "┃", "🎭━━━━━━━━━━━━━━━━━━🎭"] },
-  { url: "https://files.catbox.moe/nwtwec.jpg", emoji: "🧊", frame: ["❄️══════════════════❄️", "❄️", "❄️══════════════════❄️"] },
-  { url: "https://files.catbox.moe/ghumqx.jpg", emoji: "🧿", frame: ["🌀━━━━━━━━━━━━━━━━━━🌀", "🌀", "🌀━━━━━━━━━━━━━━━━━━🌀"] },
-  { url: "https://files.catbox.moe/to9mhw.jpg", emoji: "🔱", frame: ["🔱──────────────────🔱", "🔱", "🔱──────────────────🔱"] },
-  { url: "https://files.catbox.moe/1ghz46.jpg", emoji: "✨", frame: ["✨━━━━━━━━━━━━━━━✨", "✨", "✨━━━━━━━━━━━━━━━✨"] },
-  { url: "https://files.catbox.moe/uyk5v1.jpg", emoji: "👤", frame: ["☾━━━━━━━━━━━━━━━━━━☽", "┃", "☾━━━━━━━━━━━━━━━━━━☽"] },
-  { url: "https://files.catbox.moe/jlnqs3.jpg", emoji: "⛩️", frame: ["⛩️──────────────────⛩️", "⛩️", "⛩️──────────────────⛩️"] }
+  { url: "https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png", emoji: "🌑", frame: ["« 🌑 ━━━━━━━ SYSTEM ━━━━━━━ 🌑 »", "┃", "« ━━━━━━━━━━━━━━━━━━━━━━━━━━ »"] },
+  { url: "https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png", emoji: "⚔️", frame: ["⚔️|──────────────────|⚔️", "┃", "⚔️|──────────────────|⚔️"] },
 ];
 
 export default {
@@ -53,7 +39,7 @@ ${theme.frame[0]}
    ${theme.emoji}  *MOMO-ZEN AI* ${theme.emoji}
 ${theme.frame[2]}
 
-${theme.emoji} **DÉVELOPPEUR** : MOMO
+${theme.emoji} **DÉVELOPPEUR** : SUNG IL-HWAN 
 ${theme.emoji} **COMMANDES** : ${totalCmds}
 ${theme.emoji} **DATE** : ${date}
 ${theme.emoji} **HEURE** : ${heure}
@@ -72,7 +58,7 @@ ${theme.frame[1]} ${categories[cat].sort().join(`\n${theme.frame[1]} `)}
 `;
     }
 
-    menuText += `\n> © MOMO-ZEN AI - 2026`;
+    menuText += `\n> © SUNG IL-HWAN - 2026`;
 
     // Envoi du message avec l'image du thème
     await sock.sendMessage(m.chat, {
@@ -82,7 +68,7 @@ ${theme.frame[1]} ${categories[cat].sort().join(`\n${theme.frame[1]} `)}
         ...contextInfo,
         mentionedJid: [m.sender],
         externalAdReply: {
-          title: "M O M O - Z E N  A I",
+          title: "S U N G. I L - H W A N",
           body: "S Y S T E M  A C T I V A T E D",
           thumbnailUrl: theme.url,
           sourceUrl: "https://github.com/", // Tu peux mettre ton lien ici
