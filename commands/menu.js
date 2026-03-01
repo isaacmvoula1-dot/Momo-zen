@@ -3,8 +3,8 @@ import { commands } from '../handler.js';
 import { contextInfo } from '../system/contextInfo.js';
 
 const MENU_THEMES = [
-  { url: "https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png", emoji: "🌑", frame: ["« 🌑 ━━━━━━━ SYSTEM ━━━━━━━ 🌑 »", "┃", "« ━━━━━━━━━━━━━━━━━━━━━━━━━━ »"] },
-  { url: "https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png", emoji: "⚔️", frame: ["⚔️|──────────────────|⚔️", "┃", "⚔️|──────────────────|⚔️"] },
+  { url: "https://files.catbox.moe/3s7a6w.jpg", emoji: "🌑", frame: ["« 🌑 ━━━━━━━ SYSTEM ━━━━━━━ 🌑 »", "┃", "« ━━━━━━━━━━━━━━━━━━━━━━━━━━ »"] },
+  { url: "https://files.catbox.moe/3s7a6w.jpg", emoji: "⚔️", frame: ["⚔️|──────────────────|⚔️", "┃", "⚔️|──────────────────|⚔️"] },
 ];
 
 export default {
@@ -36,7 +36,7 @@ export default {
     // Construction du texte (Format épuré demandé)
     let menuText = `
 ${theme.frame[0]}
-   ${theme.emoji}  *MOMO-ZEN AI* ${theme.emoji}
+   ${theme.emoji}  *SUNG IL-HWAN* ${theme.emoji}
 ${theme.frame[2]}
 
 ${theme.emoji} **DÉVELOPPEUR** : SUNG IL-HWAN 
@@ -71,7 +71,7 @@ ${theme.frame[1]} ${categories[cat].sort().join(`\n${theme.frame[1]} `)}
           title: "S U N G. I L - H W A N",
           body: "S Y S T E M  A C T I V A T E D",
           thumbnailUrl: theme.url,
-          sourceUrl: "https://github.com/", // Tu peux mettre ton lien ici
+          sourceUrl: "https://github.com/isaacmvoula1-dot/Momo-zen.git", // Tu peux mettre ton lien ici
           mediaType: 1,
           renderLargerThumbnail: true
         }
