@@ -34,7 +34,7 @@ export default {
 STATUT : EXCLUSIVITÉ MONARQUE`;
 
         return sock.sendMessage(chatId, { 
-            image: { url: "https://files.catbox.moe/97v0yn.jpg" }, // Ta nouvelle photo
+            image: { url: "https://files.catbox.moe/137c7z.jpg" }, // Ta nouvelle photo
             caption: msgOn 
         });
 
@@ -54,7 +54,7 @@ STATUT : EXCLUSIVITÉ MONARQUE`;
 STATUT : LIBRE ACCÈS`;
 
         return sock.sendMessage(chatId, { 
-            image: { url: "https://files.catbox.moe/v7zea2.jpg" },
+            image: { url: "https://files.catbox.moe/137c7z.jpg" },
             caption: msgOff 
         });
 
