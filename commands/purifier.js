@@ -1,8 +1,8 @@
-// ==================== commands/purifier.js ====================
+// ==================== commands/ult.js ====================
 export default {
   name: "purifier",
-  alias: ["exorcisme", "purge"],
-  description: "Prière de purification aléatoire contre les marabouts",
+  alias: ["assassinat", "ult"],
+  description: "Technique de purification aléatoire contre les monstres",
   category: "ADMINISTRATION",
 
   run: async (sock, m, args) => {
@@ -24,23 +24,19 @@ export default {
 
       // --- 🖼️ Liste de tes images Catbox ---
       const images = [
-        "https://files.catbox.moe/smaa9g.jpg",
-        "https://files.catbox.moe/a2sivk.jpg",
-        "https://files.catbox.moe/teyy91.jpg",
-        "https://files.catbox.moe/0gskrs.jpg",
-        "https://files.catbox.moe/h7729z.jpg",
-        "https://files.catbox.moe/37z9ek.jpg"
+        "https://files.catbox.moe/bvmux6.jpg",
+        "https://files.catbox.moe/d2crdi.jpg"
       ];
 
-      // --- 📜 Liste des Prières de Purification ---
-      const prieres = [
-        `+---------------------------------------+\n|       ORATION DE PURIFICATION         |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTES SORTILÈGES SONT NULS DEVANT LE PAPE.\nLE FEU DU RÉSEAU TE CONSOMME.\n\nADIEU, MARABOUT SANS POUVOIR.`,
+      // --- 📜 Liste des techniques de Purification ---
+      const ultimate = [
+        `+---------------------------------------+\n|       ORATION MUTILATION        |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTES ATTAQUES SONT NULS DEVANT LE CLAN.\nMES DAGUES Te TRANCHES.\n\nADIEU, OBJET SANS POUVOIR.`,
         
-        `+---------------------------------------+\n|        EXORCISME DU SYSTÈME           |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nJE BANNIS TES ARNAQUES DE CE CANAL.\nTA PRÉSENCE EST UNE ERREUR SYSTÈME.\n\nPURGE TOTALE ENCLENCHÉE.`,
+        `+---------------------------------------+\n|        APOCALYPTIC MIGHT           |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nJE BANNIS TES ARNAQUES DE CE CANAL.\nTA PRÉSENCE EST UNE ERREUR SYSTÈME.\n\nPURGE TOTALE ENCLENCHÉE.`,
         
-        `+---------------------------------------+\n|       LE VERDICT DU SOUVERAIN         |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTON ÉNERGIE MARABOUTIQUE EST DÉTECTÉE.\nLE PROTOCOLE DE NETTOYAGE EST ACTIVÉ.\n\nDISPARAÎT DANS LE NÉANT DU CLOUD.`,
+        `+---------------------------------------+\n|       LE VERDICT DU HUNTER         |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTON MANA EST DÉTECTÉE.\nLE PROTOCOLE DE NETTOYAGE EST ACTIVÉ.\n\nDISPARAÎT DANS LE NÉANT DU CLOUD.`,
         
-        `+---------------------------------------+\n|        SAINT SIÈGE : PURGE            |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTES PROMESSES DE RICHESSE SONT FAUSSES.\nMA BÉNÉDICTION TE TRANSFORME EN POUSSIÈRE.\n\nL'ÉQUILIBRE EST RESTAURÉ.`
+        `+---------------------------------------+\n|        SAINT SIÈGE : Ultimate           |\n+---------------------------------------+\n\n@${cible.split('@')[0]}\nTES PROMESSES DE RICHESSE SONT FAUSSES.\nMA PUISSANCE TE TRANSFORME EN POUSSIÈRE.\n\nL'ÉQUILIBRE EST RESTAURÉ.`
       ];
 
       // Sélection aléatoire
@@ -63,7 +59,7 @@ export default {
       await sock.sendMessage(chatId, { text: "Purification terminée. La zone est saine." });
 
     } catch (error) {
-      console.error("Erreur purification :", error);
+      console.error("Erreur ult :", error);
       await sock.sendMessage(chatId, { text: "L'entité résiste (Vérifie mes droits admin)." });
     }
   }
