@@ -4,17 +4,17 @@ import config from '../config.js';
 export default {
   name: "left",
   alias: ["leave", "sortir"],
-  description: "Le bot quitte le donjon sur ordre de MOMO",
+  description: "Le bot quitte le donjon sur ordre de IL-HWAN",
   category: "OWNER",
 
   run: async (sock, m, args) => {
     try {
       const chatId = m.chat;
 
-      // 1. Sécurité : Seul MOMO (Owner) peut donner cet ordre
+      // 1. Sécurité : Seul IL-HWAN (Owner) peut donner cet ordre
       // On vérifie si c'est toi (fromMe) OU ton numéro configuré
       if (!m.fromMe && m.sender !== config.ownerNumber) {
-        return sock.sendMessage(chatId, { text: "🚫 SEUL LE MONARQUE PEUT ORDONNER MON RETRAIT." });
+        return sock.sendMessage(chatId, { text: "🚫 SEUL L'ASSASSIN PEUT ORDONNER MON RETRAIT." });
       }
 
       if (!m.isGroup) return;
@@ -24,7 +24,7 @@ export default {
 |       MISSION TERMINÉE : RETRAIT      |
 +---------------------------------------+
 |                                       |
-| ⚡ ORDRE DE MOMO REÇU                 |
+| ⚡ ORDRE DE IL-HWAN REÇU              |
 | 🌑 STATUT : RETRAIT DES OMBRES        |
 |                                       |
 | "CE DONJON N'A PLUS RIEN À M'OFFRIR.  |
@@ -35,7 +35,7 @@ STATUT : DÉCONNEXION...`;
 
       // 2. Envoi de l'image de sortie
       await sock.sendMessage(chatId, {
-        image: { url: "https://files.catbox.moe/3k8i0k.jpg" },
+        image: { url: "https://files.catbox.moe/wiozpi.jpg" },
         caption: leaveMsg
       });
 
