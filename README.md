@@ -1,7 +1,7 @@
 # 🤖 MOMO-ZEN — WhatsApp Bot
 
 <p align="center">
-  <img src="https://files.catbox.moe/jlnqs3.jpg" alt="MOMO-ZEN Banner" width="100%">
+  <img src="https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png" alt="MOMO-ZEN Banner" width="100%">
 </p>
 
 **MOMO-ZEN** is a WhatsApp bot built with **Node.js and Baileys**.  
