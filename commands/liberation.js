@@ -20,11 +20,11 @@ export default {
 Le sceau a été levé. Tout le monde peut 
 désormais envoyer des messages.
 
-© MOMO-ZEN AI - 2026
+© SUNG IL-HWAN - 2026
 `;
 
       await sock.sendMessage(m.chat, {
-        image: { url: "https://files.catbox.moe/5h3p0k.jpg" },
+        image: { url: "https://files.catbox.moe/m4qw07.jpg" },
         caption: text
       }, { quoted: m });
 
