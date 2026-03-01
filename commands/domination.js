@@ -17,16 +17,16 @@ export default {
          *D O M I N A T I O N*
 « ━━━━━━━━━━━━━━━━━━━━━━━ »
 
-> *“Taisez-vous. Le Monarque a pris sa décision.”*
+> *“Taisez-vous. Le hunter a pris sa décision.”*
 
 Le groupe est désormais sous contrôle total. 
 Seuls les administrateurs peuvent communiquer.
 
-© MOMO-ZEN AI - 2026
+© SUNG IL-HWAN - 2026
 `;
 
       await sock.sendMessage(m.chat, {
-        image: { url: "https://files.catbox.moe/jlnqs3.jpg" },
+        image: { url: "https://files.catbox.moe/ln3zrw.jpg" },
         caption: text
       }, { quoted: m });
 
