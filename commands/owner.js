@@ -1,6 +1,6 @@
 /**
- * Menu Officiel du Créateur - Monarque-alias Momo
- * Intégré pour Momo-Zen AI
+ * Menu Officiel du Créateur - Monarque-alias Il-hwan 
+ * Intégré pour Sung e
  */
 
 const handler = async (sock, m) => {
@@ -10,7 +10,7 @@ const handler = async (sock, m) => {
     const vcard = `BEGIN:VCARD\n`
                 + `VERSION:3.0\n`
                 + `FN:Monarque-alias Momo\n` 
-                + `ORG:Momo-Zen AI Creator;\n`
+                + `ORG:Sung Il-hwan Creator;\n`
                 + `TEL;type=CELL;type=VOICE;waid=${myNumber}:+243 983 128 167\n`
                 + `END:VCARD`;
 
@@ -20,8 +20,8 @@ const handler = async (sock, m) => {
       *👑 PROFIL CRÉATEUR 👑*
 ╚════════════════════╝
 
-🧘‍♂️ *Nom :* Monarque-alias Momo
-🌍 *Pays :* RDC 🇨🇩
+🧘‍♂️ *Nom :* Sung Il-hwan 
+🌍 *Pays :* Congo Brazzaville 🇨🇬
 🆔 *Telegram :* @Monarque243
 
 --- *🌐 MES RÉSEAUX* ---
@@ -39,13 +39,13 @@ https://whatsapp.com/channel/0029VbBaDRo9Bb61diUMZz1q
 https://chat.whatsapp.com/FnnKJUBOWFR0xYQqLjasyj
 
 ──────────────────────
-   *MOMO-ZEN AI - L'ÉLÉGANCE*
+   *Sung Il-hwan - L'ÉLÉGANCE*
 ──────────────────────`.trim();
 
     // 3. Envoi de la V-Card
     await sock.sendMessage(m.chat, {
         contacts: {
-            displayName: "Monarque-alias Momo",
+            displayName: "L'assassin Sung Il-hwan",
             contacts: [{ vcard }]
         }
     }, { quoted: m });
@@ -55,10 +55,10 @@ https://chat.whatsapp.com/FnnKJUBOWFR0xYQqLjasyj
         text: menuOwner,
         contextInfo: {
             externalAdReply: {
-                title: "MOMO-ZEN AI - MONARQUE-ALIAS MOMO",
-                body: "Le Maître de l'IA Zen",
+                title: "Sung Il-hwan - L'assassin Sung Il-hwan",
+                body: "père du monarque des ombres",
                 // Ton image Catbox est intégrée ici
-                thumbnailUrl: "https://files.catbox.moe/0suyka.jpg", 
+                thumbnailUrl: "https://files.catbox.moe/uxlzyo.jpg", 
                 sourceUrl: "https://whatsapp.com/channel/0029VbBaDRo9Bb61diUMZz1q",
                 mediaType: 1,
                 renderLargerThumbnail: true,
@@ -70,7 +70,7 @@ https://chat.whatsapp.com/FnnKJUBOWFR0xYQqLjasyj
 
 export default {
     name: "owner",
-    alias: ["momo", "boss", "liens", "createur"],
+    alias: ["Il-hwan", "boss", "liens", "createur"],
     description: "Affiche le menu complet du créateur",
     category: "main",
     run: handler,
