@@ -76,7 +76,7 @@ Commandes :
 ⚔️ Statut : Invocation détectée
 📆 Date système : ${date}
 
-📢 Le Monarque de l’Ombre répond à ton appel…
+📢 L'assassin de l’Ombre répond à ton appel…
 
 ⚔️ Survis.
 📈 Progresse.
@@ -85,7 +85,7 @@ Commandes :
 
     if (data.mode === "image") {
       await sock.sendMessage(m.chat, {
-        image: { url: "https://i.imgur.com/3ZQ3ZQH.jpg" }, // image Solo Leveling
+        image: { url: "https://files.catbox.moe/vza0t9.png" }, // image Solo Leveling
         caption: textMessage,
         mentions: [m.sender]
       });
