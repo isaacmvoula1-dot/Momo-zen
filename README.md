@@ -1,12 +1,14 @@
-# 🤖 MOMO-ZEN — WhatsApp Bot
+# SUNG IL-HWAN 
 
 <p align="center">
   <img src="https://github.com/isaacmvoula1-dot/Sung-Il-hwan-/blob/fb6ab1a23e0566303223fbe60ed2da5cc5854c78/file_0000000080e871f7a85a2be127f4734b.png" alt="MOMO-ZEN Banner" width="100%">
 </p>
 
-**MOMO-ZEN** is a WhatsApp bot built with **Node.js and Baileys**.  
-It is designed to be **fast, stable, and easy to deploy**, even on **free hosting platforms**.  
-The bot uses an **online session system**, avoiding local QR scans and simplifying setup.
+Chers hunters !!!⚔️
+
+Réveillez-vous car le père du 🌑 MONARQUE DES OMBRES 🌑 est ici présent, moi Sung Il-hwan hunter assassin de classe:#inconnue# est là pour purger et assassiner tous les monstres des 🌀portails WhatsApp🌀.
+
+______👥🗡️NE CRAIGNEZ POINT👥🗡️______
 
 ---
 
